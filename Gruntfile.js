@@ -1,8 +1,12 @@
 'use strict';
+
+var path = require('path');
 var lrSnippet = require('grunt-contrib-livereload/lib/utils').livereloadSnippet;
 var mountFolder = function (connect, dir) {
-    return connect.static(require('path').resolve(dir));
+    return connect.static(path.resolve(dir));
 };
+
+
 
 // # Globbing
 // for performance reasons we're only matching one level down:
@@ -51,11 +55,13 @@ module.exports = function (grunt) {
                 tasks: ['jst']
             }
         },
-        connect: {
-            options: {
-                port: 9000,
-                // change this to '0.0.0.0' to access the server from outside
-                hostname: 'localhost'
+        express: {
+            custom: {
+                options: {
+                    port: 9000,
+                    bases: 'app',
+                    server: path.resolve('./server/app')
+                }
             },
             livereload: {
                 options: {
@@ -90,7 +96,7 @@ module.exports = function (grunt) {
         },
         open: {
             server: {
-                path: 'http://localhost:<%= connect.options.port %>'
+                path: 'http://localhost:<%= express.custom.options.port %>'
             }
         },
         clean: {
@@ -112,7 +118,7 @@ module.exports = function (grunt) {
             all: {
                 options: {
                     run: true,
-                    urls: ['http://localhost:<%= connect.options.port %>/index.html']
+                    urls: ['http://localhost:<%= express.options.port %>/index.html']
                 }
             }
         },
@@ -257,13 +263,17 @@ module.exports = function (grunt) {
                 }
             }
         }
+
     });
+
 
     grunt.renameTask('regarde', 'watch');
 
+    grunt.registerTask('myServer', ['express']);
+
     grunt.registerTask('server', function (target) {
         if (target === 'dist') {
-            return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
+            return grunt.task.run(['build', 'open', 'express:dist:keepalive']);
         }
 
         grunt.task.run([
@@ -272,7 +282,7 @@ module.exports = function (grunt) {
             'jst',
             'compass:server',
             'livereload-start',
-            'connect:livereload',
+            'express:livereload',
             'open',
             'watch'
         ]);
@@ -283,7 +293,7 @@ module.exports = function (grunt) {
         'coffee',
         'jst',
         'compass',
-        'connect:test',
+        'express:test',
         'mocha'
     ]);
 
@@ -308,4 +318,7 @@ module.exports = function (grunt) {
         'test',
         'build'
     ]);
+
+
+
 };
