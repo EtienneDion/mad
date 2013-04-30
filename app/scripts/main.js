@@ -22,7 +22,7 @@ require.config({
         jquery: '../components/jquery/jquery',
         backbone: '../components/backbone-amd/backbone',
         underscore: '../components/underscore-amd/underscore',
-        bootstrap: 'vendor/bootstrap'
+        bootstrap: 'vendor/bootstrap.js'
     }
 });
 
