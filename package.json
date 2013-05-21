@@ -51,11 +51,12 @@
     "example"
   ],
   "dependencies": {
-    "express": "~3.1.0",
+    "express": "~3.2.4",
     "socket.io": "~0.9.13",
     "consolidate": "~0.8.0",
     "dustjs-linkedin": "~1.2.1",
-    "matchdep": "~0.1.1"
-
+    "matchdep": "~0.1.1",
+    "formidable": "~1.0",
+    "gm": "~1.9.1"
   }
 }

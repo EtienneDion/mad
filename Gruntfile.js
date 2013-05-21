@@ -33,9 +33,6 @@ module.exports = function(grunt) {
             //            },
             script: {
                 src: ['<%= yeoman.app %>/scripts/*.js']
-            },
-            lib: {
-                src: ['<%= yeoman.app %>/components/*.js']
             }
         },
         regarde: {
@@ -72,7 +69,7 @@ module.exports = function(grunt) {
                 imagesDir: '<%= yeoman.app %>/images',
                 javascriptsDir: '<%= yeoman.app %>/scripts',
                 fontsDir: '<%= yeoman.app %>/styles/fonts',
-                importPath: '<%= yeoman.app %>/components',
+                importPath: '<%= yeoman.app %>/scripts/vendor',
                 relativeAssets: true
             },
             dist: {},
@@ -153,8 +150,9 @@ module.exports = function(grunt) {
                         src: [
                                 '*.{ico,txt}',
                                 '.htaccess',
-                                'images/{,*/}*.{webp,gif}',
-                                'components/{,*/}*'
+                                'images/{,*/}*.{webp,gif,png,jpg,jpeg.ico,bmp}',
+                                'font/{,*/}*.*',
+                                'scripts/vendor/{,*/}*'
                         ]
                     }
                 ]
@@ -182,8 +180,10 @@ module.exports = function(grunt) {
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
     grunt.registerTask('format', ['jshint', 'jsbeautifier']);
-    grunt.registerTask('server', ['express', 'useminPrepare', 'requirejs', 'jst', 'compass', 'copy', 'cssmin', 'usemin', 'open', 'livereload-start', 'regarde']);
+    grunt.registerTask('server', ['express', 'useminPrepare', 'requirejs', 'jst', 'compass', 'copy', 'usemin', 'open', 'livereload-start', 'regarde']);
     // Default task.
     grunt.registerTask('default', ['format', 'server']);
+
+    //    grunt.registerTask('deploy', ['format', 'server']);    + cssmin
 
 };

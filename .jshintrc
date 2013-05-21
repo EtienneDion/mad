@@ -18,5 +18,12 @@
     "unused": true,
     "strict": true,
     "trailing": true,
-    "smarttabs": true
+    "smarttabs": true,
+    "globals": {
+            "jQuery": true,
+            "$": true,
+            "_": true,
+            "Dropzone": true,
+            "Backbone": true
+    }
 }

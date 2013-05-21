@@ -6,7 +6,7 @@ dist
 
 .sass-cache
 components
-
+vendor
 
 .idea
 .tmp
