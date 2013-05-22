@@ -29,6 +29,10 @@ app.configure(function() {
 
 });
 
+app.configure('development', function(){
+    app.use(express.errorHandler());
+});
+
 
 app.get('/', function(req, res){
 	res.render('index', {greeting: 'bonjour'});
@@ -39,10 +43,10 @@ app.get('/upload', function(req, res){
     res.render('upload');
 });
 
-
-app.configure('development', function(){
-    app.use(express.errorHandler());
+app.get('/draw', function(req, res){
+    res.render('draw');
 });
+
 
 
 app.post('/upload', function(req, res, next){
@@ -55,12 +59,8 @@ app.post('/upload', function(req, res, next){
         var newPath = path.resolve(__dirname + "/../upload/" + req.files.displayImage.path);
         console.log(newPath);
 
-
-
-
-
         imageMagick(req.files.displayImage.path)
-            .resize(200, 200)
+            .resize(400, 400)
             .write(newPath, function (err) {
                 if (!err) {
                     console.log(' hooray! ');
