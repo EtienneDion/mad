@@ -62,6 +62,9 @@ require([
             touchstart: function (coors) {
                 context.beginPath();
                 context.moveTo(coors.x, coors.y);
+                context.lineWidth = 15;
+                context.strokeStyle = '#ff0000';
+                context.lineCap = 'round';
                 this.isDrawing = true;
             },
             touchmove: function (coors) {

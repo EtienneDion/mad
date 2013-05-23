@@ -51,24 +51,28 @@ app.get('/draw', function(req, res){
 
 app.post('/upload', function(req, res, next){
 
-    console.log(req.files.displayImage.path);
-
-
-    fs.readFile(req.files.displayImage.path, function (err, data) {
-
-        var newPath = path.resolve(__dirname + "/../upload/" + req.files.displayImage.path);
+    var apath = req.files.displayImage.path;
+    fs.readFile(apath, function (err, data) {
+        console.log(apath);
+        var pathArray = apath.split(path.sep);
+        console.log(pathArray);
+        console.log(pathArray[pathArray.length - 1]);
+        var newPath = path.resolve(__dirname + "/../public/upload/" + pathArray[pathArray.length - 1]);
         console.log(newPath);
 
-        imageMagick(req.files.displayImage.path)
+        imageMagick(apath)
             .resize(400, 400)
             .write(newPath, function (err) {
                 if (!err) {
                     console.log(' hooray! ');
 
                     console.log('-> upload done', err);
-                    res.set('Content-Type', 'text/html');
-                    res.send(200);
-                };
+                    res.set('Content-Type', 'application/json');
+
+                    res.send(200, JSON.stringify({ path: "upload/"+ pathArray[pathArray.length - 1] }));
+                } else {
+                    console.log('err', err);
+                }
             });
 
 
