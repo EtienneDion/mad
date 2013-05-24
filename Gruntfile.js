@@ -1,7 +1,7 @@
 'use strict';
 
 var path = require('path');
-
+var grunt = require('grunt');
 
 module.exports = function(grunt) {
 
@@ -42,7 +42,7 @@ module.exports = function(grunt) {
             },
             trigger: {
                 files: '.server',
-                tasks: 'express-restart:livereload'
+                tasks: 'express:livereload'
             },
             express: {
                 files: ['<%= yeoman.app %>/templates/index.dust',
@@ -180,10 +180,11 @@ module.exports = function(grunt) {
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
     grunt.registerTask('format', ['jshint', 'jsbeautifier']);
-    grunt.registerTask('server', ['express', 'useminPrepare', 'requirejs', 'jst', 'compass', 'copy', 'usemin', 'open', 'livereload-start', 'regarde']);
+    grunt.registerTask('server', ['express', 'useminPrepare', 'requirejs', 'compass', 'copy', 'usemin', 'open', 'livereload-start', 'regarde']);
     // Default task.
     grunt.registerTask('default', ['format', 'server']);
 
     //    grunt.registerTask('deploy', ['format', 'server']);    + cssmin
+
 
 };

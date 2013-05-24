@@ -15,7 +15,7 @@
     "quotmark": "single",
     "regexp": true,
     "undef": true,
-    "unused": true,
+    "unused": false,
     "strict": true,
     "trailing": true,
     "smarttabs": true,
@@ -24,6 +24,8 @@
             "$": true,
             "_": true,
             "Dropzone": true,
-            "Backbone": true
+            "Backbone": true,
+            "define": true,
+            "events":true
     }
 }

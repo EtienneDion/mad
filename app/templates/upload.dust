@@ -19,7 +19,7 @@
 
     <div class="container">
         <div id="dropzone">
-            <form action="/upload/" method="post" enctype="multipart/form-data" class="dropzone clickable" id="myAwesomeDropzone">
+            <form action="/upload/" method="post" enctype="multipart/form-data" class="dropzone clickable" id="dropzoneForm">
               <input type="file" name="displayImage" id="displayImage"  multiple />
               <div class="default message"><span>Drop files here to upload</span></div>
             </form>

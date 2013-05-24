@@ -1,31 +1,31 @@
 {
-  "name": "grunt-express-example",
-  "description": "An example for how to use socket.io and express using grunt-express over grunt@0.4",
+  "name": "mad",
+  "description": "Project",
   "version": "0.1.0",
-  "homepage": "https://github.com/blai/grunt-express-example",
+  "homepage": "https://github.com/EtienneDion/mad",
   "author": {
-    "name": "Brian Lai",
-    "email": "brian.lai.ym@gmail.com"
+    "name": "Etienne Dion",
+    "email": "dionetienne@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/blai/grunt-express-example.git"
+    "url": "https://github.com/EtienneDion/mad.git"
   },
   "bugs": {
-    "url": "https://github.com/blai/grunt-express-example/issues"
+    "url": "https://github.com/EtienneDion/mad/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/blai/grunt-express-example/blob/master/LICENSE-MIT"
+      "url": "https://github.com/EtienneDion/mad/blob/master/LICENSE-MIT"
     }
   ],
-  "main": "lib/grunt-express-example",
+  "main": "app/server.js",
   "engines": {
-    "node": ">= 0.6.0"
+    "node": ">= 0.8.0"
   },
   "scripts": {
-    "test": "grunt nodeunit"
+    "test": "grunt default"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "~0.1.1",
@@ -47,8 +47,8 @@
     "grunt-contrib-jst": "~0.5.0"
   },
   "keywords": [
-    "grunt-express",
-    "example"
+    "mad",
+    "project"
   ],
   "dependencies": {
     "express": "~3.2.4",
