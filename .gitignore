@@ -8,7 +8,7 @@ dist
 components
 vendor
 
-tmp
+tmp/*
 public/upload/*
 public/cropped/*
 
