@@ -8,7 +8,10 @@ dist
 components
 vendor
 
-
+tmp/zone/*.*
+tmp/upload/*.*
+public/upload/*.*
+public/cropped/*.*
 
 .idea
 .tmp
