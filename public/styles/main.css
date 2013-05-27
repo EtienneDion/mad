@@ -7501,3 +7501,23 @@ a.label:hover, a.label:focus, a.badge:hover, a.badge:focus {
 body {
   border: 10px solid red;
 }
+
+/* line 14, ../../app/styles/main.scss */
+#container {
+  position: relative;
+}
+
+/* line 17, ../../app/styles/main.scss */
+#sketchpad {
+  border: 1px solid #000;
+  height: 400px;
+  width: 400px;
+  cursor: crosshair;
+}
+
+/* line 24, ../../app/styles/main.scss */
+#cropper {
+  position: absolute;
+  left: -10000px;
+  top: 0;
+}

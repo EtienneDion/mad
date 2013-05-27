@@ -13562,7 +13562,7 @@ define('uploader',[
 
     var initialize = function () {
 
-        $('#dropzoneForm').dropzone(
+        $('#dropzone').find('#dropzoneForm').dropzone(
             {
                 init: function () {
                     console.log('Dropzone Initiated');
@@ -13605,118 +13605,167 @@ define('drawer',[
 
 ], function ($, _, Backbone) {
 
-    var initialize = function () {
-        if ($('#sketchpad').length > 0) {
-
-            // get the canvas element and its context
-            var canvas = document.getElementById('sketchpad');
-            var context = canvas.getContext('2d');
-
-            // create a drawer which tracks touch movements
-            var drawer = {
-                isDrawing: false,
-                touchstart: function (coors) {
-                    context.beginPath();
-                    context.moveTo(coors.x, coors.y);
-                    context.lineWidth = 15;
-                    context.strokeStyle = '#ff0000';
-                    context.lineCap = 'round';
-                    this.isDrawing = true;
-                },
-                touchmove: function (coors) {
-                    if (this.isDrawing) {
-                        context.lineTo(coors.x, coors.y);
-                        context.stroke();
-                    }
-                },
-                touchend: function (coors) {
-                    if (this.isDrawing) {
-                        this.touchmove(coors);
-                        this.isDrawing = false;
-                    }
+    var defineDrawer = function (canvas, context, options) {
+        // create a drawer which tracks touch movements
+        return {
+            isDrawing: false,
+            touchstart: function (coors) {
+                context.beginPath();
+                context.moveTo(coors.x, coors.y);
+                context.lineWidth = options.lineWidth;
+                context.strokeStyle = options.strokeStyle;
+                context.lineCap = options.lineCap;
+                this.isDrawing = true;
+            },
+            touchmove: function (coors) {
+                if (this.isDrawing) {
+                    context.lineTo(coors.x, coors.y);
+                    context.stroke();
                 }
-            };
-
-
-            // create a function to pass touch events and coordinates to drawer
-            var draw = function (event) {
-                var type = null;
-                // map mouse events to touch events
-                switch (event.type) {
-                case 'mousedown':
-                    event.touches = [];
-                    event.touches[0] = {
-                        pageX: event.pageX,
-                        pageY: event.pageY
-                    };
-                    type = 'touchstart';
-                    break;
-                case 'mousemove':
-                    event.touches = [];
-                    event.touches[0] = {
-                        pageX: event.pageX,
-                        pageY: event.pageY
-                    };
-                    type = 'touchmove';
-                    break;
-                case 'mouseup':
-                    event.touches = [];
-                    event.touches[0] = {
-                        pageX: event.pageX,
-                        pageY: event.pageY
-                    };
-                    type = 'touchend';
-                    break;
+            },
+            touchend: function (coors) {
+                if (this.isDrawing) {
+                    this.touchmove(coors);
+                    this.isDrawing = false;
                 }
-
-                // touchend clear the touches[0], so we need to use changedTouches[0]
-                var coors;
-                if (event.type === 'touchend') {
-                    coors = {
-                        x: event.changedTouches[0].pageX,
-                        y: event.changedTouches[0].pageY
-                    };
-                }
-                else {
-                    // get the touch coordinates
-                    coors = {
-                        x: event.touches[0].pageX,
-                        y: event.touches[0].pageY
-                    };
-                }
-                type = type || event.type;
-                // pass the coordinates to the appropriate handler
-                drawer[type](coors);
-            };
-
-            // detect touch capabilities
-            var touchAvailable = ('createTouch' in document) || ('ontouchstart' in window);
-
-            // attach the touchstart, touchmove, touchend event listeners.
-            if (touchAvailable) {
-                canvas.addEventListener('touchstart', draw, false);
-                canvas.addEventListener('touchmove', draw, false);
-                canvas.addEventListener('touchend', draw, false);
             }
-            // attach the mousedown, mousemove, mouseup event listeners.
+        };
+    };
+
+    var drawEventManager = function (canvas, context, drawer, evt) {
+        var draw = function draw(event) {
+            var type = null;
+            // map mouse events to touch events
+            switch (event.type) {
+            case 'mousedown':
+                event.touches = [];
+                event.touches[0] = {
+                    pageX: event.pageX,
+                    pageY: event.pageY
+                };
+                type = 'touchstart';
+                break;
+            case 'mousemove':
+                event.touches = [];
+                event.touches[0] = {
+                    pageX: event.pageX,
+                    pageY: event.pageY
+                };
+                type = 'touchmove';
+                break;
+            case 'mouseup':
+                event.touches = [];
+                event.touches[0] = {
+                    pageX: event.pageX,
+                    pageY: event.pageY
+                };
+                type = 'touchend';
+                break;
+            }
+
+            // touchend clear the touches[0], so we need to use changedTouches[0]
+            var coors;
+            if (event.type === 'touchend') {
+                coors = {
+                    x: event.changedTouches[0].pageX,
+                    y: event.changedTouches[0].pageY
+                };
+            }
             else {
-                canvas.addEventListener('mousedown', draw, false);
-                canvas.addEventListener('mousemove', draw, false);
-                canvas.addEventListener('mouseup', draw, false);
+                // get the touch coordinates
+                coors = {
+                    x: event.touches[0].pageX,
+                    y: event.touches[0].pageY
+                };
             }
+            type = type || event.type;
+            // pass the coordinates to the appropriate handler
+            drawer[type](coors);
+        };
+        // create a function to pass touch events and coordinates to drawer
+        draw(evt);
+    };
 
-            // prevent elastic scrolling
-            document.body.addEventListener('touchmove', function (event) {
-                event.preventDefault();
-            }, false); // end body.onTouchMove
+    var bindCanvas = function (canvas, context, drawer) {
+        // detect touch capabilities
+        var touchAvailable = ('createTouch' in document) || ('ontouchstart' in window);
 
+        var drawHandler = function (event) {
+            drawEventManager(canvas, context, drawer, event);
+        };
+        // attach the touchstart, touchmove, touchend event listeners.
+        if (touchAvailable) {
+            canvas.addEventListener('touchstart', drawHandler, false);
+            canvas.addEventListener('touchmove', drawHandler, false);
+            canvas.addEventListener('touchend', drawHandler, false);
         }
+        // attach the mousedown, mousemove, mouseup event listeners.
+        else {
+            canvas.addEventListener('mousedown', drawHandler, false);
+            canvas.addEventListener('mousemove', drawHandler, false);
+            canvas.addEventListener('mouseup', drawHandler, false);
+        }
+
+        // prevent elastic scrolling
+        document.body.addEventListener('touchmove', function (event) {
+            event.preventDefault();
+        }, false); // end body.onTouchMove
+
+    };
+
+    var bindButtons = function (canvas, context) {
+        $('button.clear').click(function () {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.beginPath();
+        });
+        $('button.crop').click(function () {
+            var savedData = new Image();
+            savedData.src = canvas.toDataURL('image/png');
+            var imagepath = $('#sketchpad').data('image');
+            events.trigger('cropped', imagepath, savedData);
+        });
+    };
+
+    var initialize = function () {
+
+        var elem = $('#sketchpad');
+        var canvas = elem.get(0);
+        var context = canvas.getContext('2d');
+
+        var canvasOptions = {
+            lineWidth: 15,
+            strokeStyle: '#ff0000',
+            lineCap: 'round'
+        };
+        var drawer = defineDrawer(canvas, context, canvasOptions);
+        bindCanvas(canvas, context, drawer);
+        bindButtons(canvas, context);
     };
     return {
         initialize: initialize
     };
 });
 
+'use strict';
+
+define('cropper',[
+    'jquery',
+    'underscore',
+    'backbone'
+
+], function ($, _, Backbone, Dropzone) {
+
+    var send = function (imagepath, zonesrc) {
+        $.get('/crop/', { image: imagepath, zone: zonesrc })
+        .done(function (data) {
+            console.log('Data Loaded: ' + data);
+        });
+
+    };
+    return {
+        send: send
+    };
+});
 'use strict';
 var events = {};
 
@@ -13726,9 +13775,9 @@ define('app',[
     'backbone',
     'dropzone',
     'uploader', // Request uploader.js
-    'drawer' // Request drawer.js
-
-], function ($, _, Backbone, Dropzone, Uploader, Drawer) {
+    'drawer', // Request drawer.js
+    'cropper' // Request cropper.js
+], function ($, _, Backbone, Dropzone, Uploader, Drawer, Cropper) {
     var initialize = function () {
         // Pass in our Router module and call it's initialize function
 
@@ -13741,16 +13790,31 @@ define('app',[
 
         _.extend(events, Backbone.Events);
 
-        events.on('uploaded', function (path) {
-            console.log('Triggered Uploaded : ' + path);
+        events.on('uploaded', function (image) {
+            console.log('Triggered Uploaded : ' + image.path);
+
+            $('#sketchpad').css('background-image', 'url(' + image.path + ')');
+            $('#sketchpad').data('image', image.path);
+            $('#cropper').css('left', '0');
+
         });
+
+        events.on('cropped', function (imagepath, zone) {
+            console.log('Triggered Cropped : ', imagepath, zone);
+
+            $('#sketchpad').css('background-image', 'none');
+            $('#sketchpad').data('image', '');
+            $('#cropper').css('left', '-10000');
+            Cropper.send(imagepath, zone.src);
+        });
+
 
        // events.trigger('alert', 'an event');
 
 
         Uploader.initialize();
-
         Drawer.initialize();
+
 
     };
 
@@ -13797,7 +13861,6 @@ require([
 ], function (App) {
     // The "app" dependency is passed in as "App"
     App.initialize();
-
 
 });
 

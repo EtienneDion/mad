@@ -8,6 +8,10 @@ dist
 components
 vendor
 
+tmp
+public/upload/*
+public/cropped/*
+
 .idea
 .tmp
 .git

@@ -19,15 +19,18 @@
 
     <div class="container">
         <div id="dropzone">
-            <form action="/upload/" method="post" enctype="multipart/form-data" class="dropzone clickable" id="dropzoneForm">
-              <input type="file" name="displayImage" id="displayImage"  multiple />
-              <div class="default message"><span>Drop files here to upload</span></div>
-            </form>
+             <form action="/upload/" method="post" enctype="multipart/form-data" class="dropzone clickable" id="dropzoneForm">
+                   <input type="file" name="displayImage" id="displayImage"  multiple />
+                   <div class="default message"><span>Drop files here to upload</span></div>
+             </form>
         </div>
+        <div id="cropper">
+            <canvas id="sketchpad" width="400" height="400">Sorry, your browser is not supported.</canvas>
+            <button class="clear">Clear</button>
+            <button class="crop">Select Zone</button>
+        </div>
+
     </div>
-
-
-
 
     <!--[if lt IE 7]>
         <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>

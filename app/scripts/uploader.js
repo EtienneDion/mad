@@ -10,7 +10,7 @@ define([
 
     var initialize = function () {
 
-        $('#dropzoneForm').dropzone(
+        $('#dropzone').find('#dropzoneForm').dropzone(
             {
                 init: function () {
                     console.log('Dropzone Initiated');

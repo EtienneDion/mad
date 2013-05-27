@@ -15,5 +15,14 @@ body{
   position:relative;
 }
 #sketchpad {
+
   border: 1px solid #000;
+  height:400px;
+  width:400px;
+  cursor:crosshair;
+}
+#cropper{
+  position:absolute;
+  left:-10000px;
+  top:0;
 }

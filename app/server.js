@@ -72,12 +72,56 @@ app.post('/upload', function(req, res, next){
                     res.send(200, JSON.stringify({ path: "upload/"+ pathArray[pathArray.length - 1] }));
                 } else {
                     console.log('err', err);
+                    res.set('Content-Type', 'application/json');
+                    res.send(500, JSON.stringify({ error: err }));
                 }
             });
 
 
 
     });
+
+});
+
+app.get('/crop', function(req, res, next){
+    console.log(req.query.image, req.query.zone);
+    var imagePath = req.query.image;
+    var zone =  req.query.zone;
+    var filename = imagePath.replace(/^upload\//,"");
+    var base64Data = zone.replace(/^data:image\/png;base64,/,"");
+    var pngfilename =  filename.replace(/.jpg/,".png");
+    console.log(pngfilename);
+    var zonePathResolved = path.resolve(__dirname + "/../tmp/zone/"+pngfilename);
+    var newPath =  __dirname + "/../public/cropped/" + pngfilename;
+    var newPathResolved = path.resolve(newPath);
+    var imagePathResolved = path.resolve(__dirname + "/../public/" + imagePath);
+    fs.writeFile(zonePathResolved, base64Data, 'base64', function(err) {
+        if(!err){
+            console.log("cropped");
+
+            console.log(imagePathResolved, zonePathResolved, newPathResolved);
+
+
+            imageMagick(imagePathResolved)
+                .mask(zonePathResolved)
+                .compose("Subtract")
+                .write(newPathResolved, function (err){
+                    if(!err){
+                        console.log("masqued");
+                        res.set('Content-Type', 'application/json');
+                        res.send(200, JSON.stringify({ path: "/cropped/" + filename }));
+                    } else {
+                        console.log(err);
+                        res.set('Content-Type', 'application/json');
+                        res.send(500, JSON.stringify({ error: err, step:"masqued" }));
+                    }
+                });
+        } else {
+            res.set('Content-Type', 'application/json');
+            res.send(500, JSON.stringify({ error: err, step: "cropped" }));
+        }
+    });
+
 
 });
 
